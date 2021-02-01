@@ -1,0 +1,134 @@
+<!-- HTML -> Lenguaje de Marcacion de Hipertexto -->
+<!DOCTYPE html><!--Definimos el tipo de documento vamos a utilizar -->
+<html lang="es"><!-- Establecemos el idioma -->
+<head><!-- Define la cabecera del documento -->
+    <meta charset="UTF-8"><!-- Definimos la codificacion del documento  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro_de_alumnos_PRO_IV</title><!-- Titulo de la aplicacion en la ventana del navegador -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body><!-- Cuerpo de mi documento -->
+    <div id="appAlumnos" class="container-fluid">
+        <form v-on:submit.prevent="guardarAlumno" v-on:reset="limpiar" >
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="row p-2">
+                        <div class="col-sm text-center text-white btn-success">
+                            <h5>REGISTRO DE ALUMNOS</h5>
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">CODIGO:</div>
+                        <div class="col-sm">
+                            <input v-model="alumno.codigo" required pattern="^[0-9]{3}$" type="text" class="form-control form-control-sm" placeholder="Ingrese codigo" >
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">NOMBRE: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.nombre" required pattern="[A-ZÑña-z0-9 ]{5,65}" type="text" class="form-control form-control-sm" placeholder="Escriba su nombre">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">DIRECCION: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.direccion" required pattern="[A-ZÑña-z0-9 ]{5,65}" type="text" class="form-control form-control-sm" placeholder="Escriba su direccion">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">MUNICIPIO: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.municipio" required pattern="[A-ZÑña-z0-9 ]{5,15}" type="text" class="form-control form-control-sm" placeholder="Escriba su municipio ">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">DEPARTAMENTO: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.departamento" required pattern="[A-ZÑña-z0-9 ]{5,15}" type="text" class="form-control form-control-sm" placeholder="Escriba su departamento">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">TELEFONO:</div>
+                        <div class="col-sm">
+                            <input v-model="alumno.telefono" required pattern="[0-9]{4}-[0-9]{4}" type="text" class="form-control form-control-sm" placeholder="Ejem: 0000-0000">
+                        </div>
+                    </div>
+                    <div class="row p-2">
+                        <div class="col-sm">FECHA_DE_NACIMIENTO: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.fecha_de_nacimiento" required pattern="{0000-00-00}" type="date" class="form-control form-control-sm" placeholder="Ejem: 0000-00-00">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">SEXO: </div>
+                        <div class="col-sm">
+                            <input v-model="alumno.sexo" required pattern= "[F/M]{1}" type="radio" class="form-control form-control-sm" placeholder="Ejem: F/M">
+                        </div>
+                    </div>
+                    <div class="row p-2"><!-- FUNCIONAL -->
+                        <div class="col-sm">IMAGEN:</div>
+                        <div class="col-sm">
+                            <img width="200" height="200" class="rounded-circle" :src="alumno.img">
+                            <!--<img class="img-fluid" :src="alumno.img2">-->
+                            <input v-on:change="obtenerImg($event)" multiple type="file" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="row -p-2">
+                        <div class="col-sm text-center">
+                            <input type="submit" value="Guardar" class="btn btn-primary"></button>
+                            <input type="reset" value="Limpiar" class="btn btn-success"></button>
+                            <input type="submit" value="Modificar" class="btn btn-primary"></button>
+                            <input type="reset" value="Eliminar" class="btn-secondary"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+                <div class="col-sm-6 p-2">
+                    <div class="row text-center text-white bg-primary">
+                        <div class="col"><h5>ALUMNOS REGISTRADOS</h5></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="tble table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>CODIGO</th>
+                                        <th>NOMBRE</th>
+                                        <th>DIRECCION</th>
+                                        <th>MUNICIPIO</th>
+                                        <th>DEPARTAMENTO</th>
+                                        <th>TELEFONO</th>
+                                        <th>FECHA_DE_NACIMIENTO</th>
+                                        <th>SEXO</th>
+                                        <th>IMG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="pro in alumnos" v-on:click="mostrarAlumno(pro)">
+                                        <td>{{ pro.codigo }}</td>
+                                        <td>{{ pro.nombre }}</td>
+                                        <td>{{ pro.direccion }}</td>
+                                        <td>{{ pro.municipio }}</td>
+                                        <td>{{ pro.departamento }}</td>
+                                        <td>{{ pro.telefono }}</td>
+                                        <td>{{ pro.fecha_de_nacimiento }}</td>
+                                        <td>{{ pro.sexo }}</td>
+                                        <td>{{ pro.img }}</td>
+                                        <td> <input v-on:click="modificarAlumno(pro)" type="button" class="btn"></td>
+                                        <td>
+                                           <input v-on:click="eliminarAlumno(pro.idAlumno)" type="button" class="btn">
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
